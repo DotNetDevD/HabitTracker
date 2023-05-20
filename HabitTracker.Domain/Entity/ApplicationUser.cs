@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace HabitTracker.DAL.Data
+namespace HabitTracker.Domain.Entity
 {
     public class ApplicationUser : IdentityUser
     {

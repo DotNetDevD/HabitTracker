@@ -251,7 +251,7 @@ namespace HabitTracker.DAL.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("HabitTracker.DAL.Data.ApplicationUser", b =>
+            modelBuilder.Entity("HabitTracker.Domain.Entity.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
