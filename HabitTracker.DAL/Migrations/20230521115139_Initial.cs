@@ -55,10 +55,14 @@ namespace HabitTracker.DAL.Migrations
                 name: "Habit",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    WeeklyGoal = table.Column<int>(type: "int", nullable: false),
+                    CurrentCount = table.Column<int>(type: "int", nullable: false),
+                    IsGoalMet = table.Column<bool>(type: "bit", nullable: false),
+                    NextReset = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

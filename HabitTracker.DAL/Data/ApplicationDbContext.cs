@@ -9,7 +9,7 @@ public class ApplicationDbContext : IdentityDbContext
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
-        Database.EnsureCreated();
+        
     }
 
     protected override void OnModelCreating(ModelBuilder builder)
@@ -21,7 +21,6 @@ public class ApplicationDbContext : IdentityDbContext
         builder.ApplyConfiguration(new ApplicationUserEntityConfiguration());
     }
     public DbSet<Habit> Habit { get; set; }
-    public DbSet<ApplicationUser> ApplicationUser { get; set; }
 }
 
 public class ApplicationUserEntityConfiguration : IEntityTypeConfiguration<ApplicationUser>
