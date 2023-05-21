@@ -6,6 +6,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using HabitTracker.Domain.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -58,6 +59,16 @@ namespace HabitTracker.Common.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Required]
+            [Display(Name = "First Name")]
+            [StringLength(255, ErrorMessage = "The first name field must be at least {0} and at max 255 characters long.", MinimumLength = 1)]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Last Name")]
+            [StringLength(255, ErrorMessage = "The last name field must be at least {0} and at max 255 characters long.", MinimumLength = 1)]
+            public string LastName { get; set; }
         }
 
         private async Task LoadAsync(IdentityUser user)
@@ -65,11 +76,17 @@ namespace HabitTracker.Common.Areas.Identity.Pages.Account.Manage
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
+            ApplicationUser applicationUser = (ApplicationUser)user;
+            var userFirstName = applicationUser.FirstName;
+            var userLastName = applicationUser.LastName;
+
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                PhoneNumber = phoneNumber,
+                FirstName = applicationUser.FirstName,
+                LastName = applicationUser.LastName
             };
         }
 
@@ -87,7 +104,7 @@ namespace HabitTracker.Common.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = (ApplicationUser)await _userManager.GetUserAsync(User);
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
@@ -110,6 +127,33 @@ namespace HabitTracker.Common.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+            if (Input.FirstName != user.FirstName)
+            {
+                try
+                {
+                    user.FirstName = Input.FirstName;
+                }
+                catch
+                {
+                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    return RedirectToPage();
+                }
+            }
+
+            if (Input.LastName != user.LastName)
+            {
+                try
+                {
+                    user.LastName = Input.LastName;
+                }
+                catch
+                {
+                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    return RedirectToPage();
+                }
+            }
+
+            await _userManager.UpdateAsync(user);
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
