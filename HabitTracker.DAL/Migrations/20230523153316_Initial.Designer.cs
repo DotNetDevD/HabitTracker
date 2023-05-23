@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HabitTracker.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230521115139_Initial")]
+    [Migration("20230523153316_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,12 +32,22 @@ namespace HabitTracker.DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<int>("CurrentCount")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<DateTime>("FinishDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("HabitType")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsGoalMet")
                         .HasColumnType("bit");
@@ -49,10 +59,15 @@ namespace HabitTracker.DAL.Migrations
                     b.Property<DateTime>("NextReset")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("WeeklyGoal")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Habit");
                 });
@@ -282,6 +297,17 @@ namespace HabitTracker.DAL.Migrations
                     b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
+            modelBuilder.Entity("HabitTracker.Domain.Entity.Habit", b =>
+                {
+                    b.HasOne("HabitTracker.Domain.Entity.ApplicationUser", "ApplicationUser")
+                        .WithMany("Habits")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -331,6 +357,11 @@ namespace HabitTracker.DAL.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("HabitTracker.Domain.Entity.ApplicationUser", b =>
+                {
+                    b.Navigation("Habits");
                 });
 #pragma warning restore 612, 618
         }

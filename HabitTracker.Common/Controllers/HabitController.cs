@@ -1,9 +1,12 @@
 ﻿using HabitTracker.DAL.Repository.IRepository;
 using HabitTracker.Domain.Entity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HabitTracker.Common.Controllers
 {
+    [Authorize]
     public class HabitController : Controller
     {
         private readonly IHabitRepository _habitRepository;
@@ -15,7 +18,8 @@ namespace HabitTracker.Common.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var habitsList = await _habitRepository.GetListAsync();
+            var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var habitsList = await _habitRepository.GetListHabitByUserIdAsync(id);
             ResetCount(habitsList);
             return View(habitsList);
         }
@@ -33,6 +37,8 @@ namespace HabitTracker.Common.Controllers
         {
             if (ModelState.IsValid)
             {
+                var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                habit.ApplicationUserId = id;
                 habit.NextReset = DateTime.Now.AddDays(7 - (int)DateTime.Now.DayOfWeek);
                 await _habitRepository.CreateAsync(habit);
                 return RedirectToAction("Index");
@@ -100,6 +106,8 @@ namespace HabitTracker.Common.Controllers
         {
             if (ModelState.IsValid)
             {
+                var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                habit.ApplicationUserId = id;
                 await _habitRepository.UpdateAsync(habit);
                 return RedirectToAction("Index");
             }

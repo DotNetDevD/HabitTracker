@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HabitTracker.DAL.Repository
 {
-    public class BaseRepository<T> : IRepository<T> 
+    public class BaseRepository<T> : IRepository<T>
         where T : class
     {
         protected ApplicationDbContext _db { get; set; }

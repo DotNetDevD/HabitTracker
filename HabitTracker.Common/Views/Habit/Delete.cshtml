@@ -3,7 +3,6 @@
 @{
     ViewData["Title"] = "Create";
 }
-
 <form method="post" asp-action="DeletePost">
     <input asp-for="Id" hidden />
     <div class="border p-3">
@@ -11,49 +10,56 @@
         <div class="form-group row">
             <h2 class="text-info pl-3">Delete habit</h2>
         </div>
-        <div class="row">
-            <div class="col-8">
-                <div class="form-group row">
-                    <div class="col-4">
-                        <label asp-for="Name"></label>
-                    </div>
-                    <div class="col-8">
-                        <input asp-for="Name" disabled class="form-control" />
-                    </div>
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="WeeklyGoal" disabled class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="WeeklyGoal" class="form-label"></label>
+            <input asp-for="WeeklyGoal" disabled class="form-control form-control-sm" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="StartDate" class="form-label"></label>
+            <input asp-for="StartDate" disabled class="form-control form-control-sm" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="FinishDate" class="form-label"></label>
+            <input asp-for="FinishDate" disabled class="form-control form-control-sm" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="HabitType" class="control-label"></label>
+            <input asp-for="HabitType" disabled
+                   class="form-control-sm"
+                   asp-items="Html.GetEnumSelectList<HabitType>()" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description" class="form-label"></label>
+            <textarea asp-for="Description" disabled class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-8 offset-4 row">
+                <div class="col">
+                    <input type="submit" class="btn btn-danger w-100" value="Delete" />
                 </div>
-                <div class="form-group row">
-                    <div class="col-4">
-                        <label asp-for="WeeklyGoal"></label>
-                    </div>
-                    <div class="col-8">
-                        <input asp-for="WeeklyGoal" disabled class="form-control" />
-                    </div>
+                <div class="col">
+                    <a asp-action="Index" class="btn btn-success w-100 text-decoration-none">
+                        Back
+                    </a>
                 </div>
-                <div class="form-group row">
-                    <div class="col-8 offset-4 row">
-                        <div class="col">
-                            <input type="submit" class="btn btn-danger w-100" value="Delete" />
-                        </div>
-                        <div class="col">
-                            <a asp-action="Index" class="btn btn-success w-100">
-                                Back
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4">
-                @* Keep this empty ?*@
             </div>
         </div>
     </div>
-
+    <div class="col-4">
+        @* Keep this empty ?*@
+    </div>
 </form>
 
-@section scripts {
-
-    @{
-        <partial name="_ValidationScriptsPartial" />
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
     }
-
-}

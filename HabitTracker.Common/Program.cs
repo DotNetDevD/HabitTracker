@@ -1,5 +1,6 @@
 using HabitTracker.Common.Extensions;
 using HabitTracker.DAL.Data;
+using HabitTracker.Domain.Entity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 

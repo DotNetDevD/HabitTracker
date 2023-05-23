@@ -6,5 +6,6 @@ namespace HabitTracker.Domain.Entity
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public virtual ICollection<Habit> Habits { get; set; }
     }
 }
