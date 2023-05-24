@@ -79,7 +79,7 @@ namespace HabitTracker.Common.Areas.Identity.Pages.Account.Manage
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
-            ApplicationUser applicationUser = (ApplicationUser)user;
+            ApplicationUser applicationUser = user;
             var userFirstName = applicationUser.FirstName;
             var userLastName = applicationUser.LastName;
 
@@ -97,7 +97,7 @@ namespace HabitTracker.Common.Areas.Identity.Pages.Account.Manage
         public async Task<IActionResult> OnGetAsync()
         {
             var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            if (user is null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
@@ -108,8 +108,8 @@ namespace HabitTracker.Common.Areas.Identity.Pages.Account.Manage
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var user = (ApplicationUser)await _userManager.GetUserAsync(User);
-            if (user == null)
+            var user = await _userManager.GetUserAsync(User);
+            if (user is null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
