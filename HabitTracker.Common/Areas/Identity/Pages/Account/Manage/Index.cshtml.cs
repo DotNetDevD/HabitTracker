@@ -15,12 +15,12 @@ namespace HabitTracker.Common.Areas.Identity.Pages.Account.Manage
 {
     public class IndexModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
         public IndexModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager)
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -69,9 +69,12 @@ namespace HabitTracker.Common.Areas.Identity.Pages.Account.Manage
             [Display(Name = "Last Name")]
             [StringLength(255, ErrorMessage = "The last name field must be at least {0} and at max 255 characters long.", MinimumLength = 1)]
             public string LastName { get; set; }
+
+            [Display(Name = "Profile Picture")]
+            public byte[] Avatar { get; set; }
         }
 
-        private async Task LoadAsync(IdentityUser user)
+        private async Task LoadAsync(ApplicationUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
@@ -86,7 +89,8 @@ namespace HabitTracker.Common.Areas.Identity.Pages.Account.Manage
             {
                 PhoneNumber = phoneNumber,
                 FirstName = applicationUser.FirstName,
-                LastName = applicationUser.LastName
+                LastName = applicationUser.LastName,
+                Avatar = applicationUser.Avatar
             };
         }
 
@@ -151,6 +155,21 @@ namespace HabitTracker.Common.Areas.Identity.Pages.Account.Manage
                     StatusMessage = "Unexpected error when trying to set phone number.";
                     return RedirectToPage();
                 }
+            }
+
+            if (Request.Form.Files.Count > 0)
+            {
+                var file = Request.Form.Files.FirstOrDefault();
+
+                //check file size and extension
+
+                using (var dataStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(dataStream);
+                    byte[] bytes = dataStream.ToArray();
+                    user.Avatar = bytes;
+                }
+                
             }
 
             await _userManager.UpdateAsync(user);

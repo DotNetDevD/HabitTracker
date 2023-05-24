@@ -11,21 +11,9 @@ namespace HabitTracker.Domain.MyAttribute
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var model = validationContext.ObjectInstance as Habit;
-
-            if (model != null)
-            {
-                bool isDateValid = model.StartDate <= model.FinishDate;
-
-                if (isDateValid)
-                {
-                    return ValidationResult.Success;
-                }
-                else
-                {
-                    return new ValidationResult(string.Empty);
-                }
-            }
+            if (validationContext?.ObjectInstance is Habit model &&
+                model.StartDate > model.FinishDate)
+                return new ValidationResult(string.Empty);
 
             return ValidationResult.Success;
         }
